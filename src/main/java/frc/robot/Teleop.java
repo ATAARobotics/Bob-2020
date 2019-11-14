@@ -5,6 +5,9 @@ public class Teleop {
     private SWATDrive driveTrain;
     private RobotMap robotMap;
     private OI joysticks;
+    private double speedX = 0;
+    private double speedZ = 0;
+    private double limit = 0.02;
 
 
     public Teleop() {
@@ -14,10 +17,30 @@ public class Teleop {
         driveTrain = new SWATDrive(robotMap);
     }
 
+    public void TeleopInit() {
+        //driveTrain.gearShift();
+    }
+
     public void TeleopPeriodic() {
         joysticks.checkInputs();
         //drive
-        driveTrain.arcadeDrive(joysticks.getXSpeed() * driveTrain.getMaxStraightSpeed(), joysticks.getZRotation() * driveTrain.getMaxTurnSpeed());
+        double joystickX = -joysticks.getXSpeed();
+        double joystickZ = joysticks.getZRotation();
+        double changeX = joystickX - speedX;
+        double changeZ = joystickZ - speedZ;
+        if(changeX>limit && joystickX > 0) {
+            changeX = limit;
+            System.out.println("1");
+        }
+        else if(changeX<limit && joystickX < 0) {
+            changeX = -limit;
+            System.out.println("2");
+        }
+        speedX += changeX;
+        speedZ += changeZ;
+
+        System.out.println("speed = " + speedX);
+        driveTrain.arcadeDrive(speedX * driveTrain.getMaxStraightSpeed(), speedZ * driveTrain.getMaxTurnSpeed());
         //speed limiters
         if(joysticks.getGearShift()) {
             driveTrain.gearShift();
@@ -26,6 +49,7 @@ public class Teleop {
             driveTrain.slow();
         }
     }
+
 	public void drive(double speedA, double speedB, boolean arcade) {
         if(arcade) {
             driveTrain.arcadeDrive(speedA, speedB);

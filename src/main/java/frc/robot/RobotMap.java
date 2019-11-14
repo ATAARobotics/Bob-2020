@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.revrobotics.CANEncoder;
 //import motor controller libraries
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -7,20 +8,20 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 //import camera libraries
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 //import solenoids
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 //import shuffleboard
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-
 public class RobotMap {
     //Motor Controllers
-    private CANSparkMax frontLeftMotor = new CANSparkMax(0, MotorType.kBrushless);
-    private CANSparkMax rearLeftMotor = new CANSparkMax(1, MotorType.kBrushless);
-    private CANSparkMax frontRightMotor = new CANSparkMax(2, MotorType.kBrushless);
-    private CANSparkMax rearRightMotor = new CANSparkMax(3, MotorType.kBrushless);
-    
+    private CANSparkMax frontLeftMotor = new CANSparkMax(3, MotorType.kBrushless);
+    private CANSparkMax rearLeftMotor = new CANSparkMax(4, MotorType.kBrushless);
+    private CANSparkMax frontRightMotor = new CANSparkMax(1, MotorType.kBrushless);
+    private CANSparkMax rearRightMotor = new CANSparkMax(2, MotorType.kBrushless);
+    private CANEncoder frontLeftEncoder = frontLeftMotor.getEncoder();
+    private CANEncoder rearLeftEncoder = rearLeftMotor.getEncoder();
+    private CANEncoder frontRightEncoder = frontRightMotor.getEncoder();
+    private CANEncoder rearRightEncoder = rearRightMotor.getEncoder();
+
     //Group Drive
     private SpeedControllerGroup rightMotors = new SpeedControllerGroup(rearRightMotor, frontRightMotor);
     private SpeedControllerGroup leftMotors = new SpeedControllerGroup(rearLeftMotor, frontLeftMotor);
@@ -29,21 +30,18 @@ public class RobotMap {
     private DifferentialDrive driveTrain = new DifferentialDrive(leftMotors, rightMotors);
     
     //Gear Shifting Solenoid
-    private DoubleSolenoid gearShiftSolenoid = new DoubleSolenoid(0, 1);
+    private DoubleSolenoid gearShiftSolenoid = new DoubleSolenoid(6, 7);
 
     public RobotMap() {
-        //Set camera variables and Add to Shuffleboard
-        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(0);
-        Shuffleboard.getTab("Camera").add(camera);
-        UsbCamera camera2 = CameraServer.getInstance().startAutomaticCapture(1);
-        Shuffleboard.getTab("Camera").add(camera2);
-        camera.setFPS(30);
-        camera2.setFPS(30);
-        //sync motors
         rearLeftMotor.follow(frontLeftMotor);
         rearRightMotor.follow(frontRightMotor);
     }
-
+    public CANSparkMax getLeftMotor() {
+        return frontLeftMotor;
+    }
+    public CANSparkMax getRightMotor() {
+        return frontRightMotor;
+    }
     //Get Motors
     public SpeedControllerGroup getLeftMotors() {
         return leftMotors;
