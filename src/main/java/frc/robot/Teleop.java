@@ -8,7 +8,7 @@ public class Teleop {
     /**
      * Creates a Teleop object which is the main file when in teleop mode.
      */
-    public Teleop() {
+    public Teleop(RobotMap robotMap) {
         // Initialize Classes
         robotMap = new RobotMap();
         joysticks = new OI();
