@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.lang.Math;
+
 import com.revrobotics.ColorSensorV3;
 
 import java.io.FileWriter;
@@ -13,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Teleop {
     // Vairables for robot classes
     private OI joysticks = null;
-    
+
     private ColorMatch colorMatcher = null;
     private ColorSensorV3 colorSensor = null;
 
@@ -47,12 +49,45 @@ public class Teleop {
 
         colorData += Integer.toString(colorSensor.getRed()) + "," + Integer.toString(colorSensor.getGreen()) + "," + Integer.toString(colorSensor.getBlue()) + "," + Integer.toString(colorSensor.getProximity()) + "\n";
 
-        
+        double normRed = colorSensor.getRed();
+        double normGreen = colorSensor.getGreen();
+        double normBlue = colorSensor.getBlue();
 
-        SmartDashboard.putNumber("Red", colorSensor.getRed());
-        SmartDashboard.putNumber("Green", colorSensor.getGreen());
-        SmartDashboard.putNumber("Blue", colorSensor.getBlue());
+        double max = Math.max(Math.max(normRed, normGreen), normBlue);
+
+        normRed /= max;
+        normGreen /= max;
+        normBlue /= max;
+
+        SmartDashboard.putNumber("Red", normRed);
+        SmartDashboard.putNumber("Green", normGreen);
+        SmartDashboard.putNumber("Blue", normBlue);
         SmartDashboard.putNumber("Proximity", colorSensor.getProximity());
+
+        double redPercent = Math.abs(normRed-1.0) + Math.abs(normGreen-0.8) + Math.abs(normBlue-0.2);
+        double yellowPercent = Math.abs(normGreen-1.0) + Math.abs(normRed-0.5) + Math.abs(normBlue-0.2);
+        double greenPercent = Math.abs(normGreen-1.0) + Math.abs(normBlue-0.3) + Math.abs(normRed-0.2);
+        double bluePercent = Math.abs(normBlue-1.0) + Math.abs(normGreen-1.0) + Math.abs(normRed-0.2);
+
+        SmartDashboard.putNumber("Red", redPercent);
+        SmartDashboard.putNumber("Yellow", yellowPercent);
+        SmartDashboard.putNumber("Green", greenPercent);
+        SmartDashboard.putNumber("Blue", bluePercent);
+
+        double highest = Math.max(Math.max(redPercent, yellowPercent), Math.max(greenPercent, bluePercent));
+
+        String guess = "";
+        if (redPercent == highest) { // TODO: Think of a better way of doing this
+            guess = "red";
+        } else if (yellowPercent == highest) {
+            guess = "yellow";
+        } else if (greenPercent == highest) {
+            guess = "green";
+        } else if (bluePercent == highest) {
+            guess = "blue";
+        }
+
+        SmartDashboard.putString("Guess", guess);
 
         joysticks.checkInputs();
     }
