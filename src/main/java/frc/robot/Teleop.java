@@ -47,8 +47,6 @@ public class Teleop {
      */
     public void TeleopPeriodic() {
 
-        colorData += Integer.toString(colorSensor.getRed()) + "," + Integer.toString(colorSensor.getGreen()) + "," + Integer.toString(colorSensor.getBlue()) + "," + Integer.toString(colorSensor.getProximity()) + "\n";
-
         // Get normalized colours (0-1 where 1 means equal to the brightest colour)
         double normRed = colorSensor.getRed();
         double normGreen = colorSensor.getGreen();
@@ -77,15 +75,12 @@ public class Teleop {
         SmartDashboard.putNumber("Green Diff", greenDifference);
         SmartDashboard.putNumber("Blue Diff", blueDifference);
 
-        // Compute a string containing the name of the closest matched colour
-        double lowest = Math.min(Math.min(redDifference, yellowDifference), Math.min(greenDifference, blueDifference));
-
         String guess = "Unknown";
         if (redDifference <= greenDifference && redDifference <= blueDifference && redDifference <= yellowDifference) {
             guess = "Red";
         } else if (yellowDifference <= greenDifference && yellowDifference <= blueDifference && yellowDifference <= redDifference) {
             guess = "Yellow";
-        } else if (greenDifference <= redDifference && greenDifference <= blueDifference && redDifference <= yellowDifference) {
+        } else if (greenDifference <= redDifference && greenDifference <= blueDifference && greenDifference <= yellowDifference) {
             guess = "Green";
         } else if (blueDifference <= greenDifference && blueDifference <= redDifference && blueDifference <= yellowDifference) {
             guess = "Blue";
@@ -103,25 +98,6 @@ public class Teleop {
         joysticks.checkInputs();
     }
     public void disabledInit() {
-        try {
-            colorLog = new FileWriter("home/lvuser/colorLog.csv");
-        } catch (IOException e) {
-            return;
-        }
 
-        try {
-            colorLog.write(colorData);
-            colorLog.flush();
-        } catch (IOException e) {
-            System.out.println(e.toString());
-            return;
-        }
-
-        try {
-            System.out.println("Closing");
-            colorLog.close();
-        } catch (Exception e) {
-            return;
-        }
     }
 }
