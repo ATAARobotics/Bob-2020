@@ -64,32 +64,31 @@ public class Teleop {
         SmartDashboard.putNumber("Red", normRed);
         SmartDashboard.putNumber("Green", normGreen);
         SmartDashboard.putNumber("Blue", normBlue);
-        SmartDashboard.putNumber("Proximity", colorSensor.getProximity());
 
         // Compute the difference between the actual colour and the expected colour for each colourwheel colour
-        double redPercent = Math.abs(normRed-1.0) + Math.abs(normGreen-0.8) + Math.abs(normBlue-0.2);
-        double yellowPercent = Math.abs(normGreen-1.0) + Math.abs(normRed-0.5) + Math.abs(normBlue-0.2);
-        double greenPercent = Math.abs(normGreen-1.0) + Math.abs(normBlue-0.3) + Math.abs(normRed-0.2);
-        double bluePercent = Math.abs(normBlue-1.0) + Math.abs(normGreen-1.0) + Math.abs(normRed-0.2);
+        double redDifference = Math.abs(normRed-1.0) + Math.abs(normGreen-0.8) + Math.abs(normBlue-0.2);
+        double yellowDifference = Math.abs(normGreen-1.0) + Math.abs(normRed-0.5) + Math.abs(normBlue-0.2);
+        double greenDifference = Math.abs(normGreen-1.0) + Math.abs(normBlue-0.3) + Math.abs(normRed-0.2);
+        double blueDifference = Math.abs(normBlue-1.0) + Math.abs(normGreen-1.0) + Math.abs(normRed-0.2);
 
         // Give the differences for each of the four colourwheel colours to smart dashboard
-        SmartDashboard.putNumber("Red", redPercent);
-        SmartDashboard.putNumber("Yellow", yellowPercent);
-        SmartDashboard.putNumber("Green", greenPercent);
-        SmartDashboard.putNumber("Blue", bluePercent);
+        SmartDashboard.putNumber("Red Diff", redDifference);
+        SmartDashboard.putNumber("Yellow Diff", yellowDifference);
+        SmartDashboard.putNumber("Green Diff", greenDifference);
+        SmartDashboard.putNumber("Blue Diff", blueDifference);
 
         // Compute a string containing the name of the closest matched colour
-        double highest = Math.max(Math.max(redPercent, yellowPercent), Math.max(greenPercent, bluePercent));
+        double lowest = Math.min(Math.min(redDifference, yellowDifference), Math.min(greenDifference, blueDifference));
 
-        String guess = "";
-        if (redPercent == highest) {
-            guess = "red";
-        } else if (yellowPercent == highest) {
-            guess = "yellow";
-        } else if (greenPercent == highest) {
-            guess = "green";
-        } else if (bluePercent == highest) {
-            guess = "blue";
+        String guess = "Unknown";
+        if (redDifference <= greenDifference && redDifference <= blueDifference && redDifference <= yellowDifference) {
+            guess = "Red";
+        } else if (yellowDifference <= greenDifference && yellowDifference <= blueDifference && yellowDifference <= redDifference) {
+            guess = "Yellow";
+        } else if (greenDifference <= redDifference && greenDifference <= blueDifference && redDifference <= yellowDifference) {
+            guess = "Green";
+        } else if (blueDifference <= greenDifference && blueDifference <= redDifference && blueDifference <= yellowDifference) {
+            guess = "Blue";
         }
 
         SmartDashboard.putString("Guess", guess);
