@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
      */
     Robot() {
         robotMap = new RobotMap();
-        teleop = new Teleop(robotMap);
+        teleop = new Teleop(robotMap.getColorSensor());
     }
 
     /**
@@ -75,5 +75,9 @@ public class Robot extends TimedRobot {
     */
     public void testPeriodic() {
         teleop.TestPeriodic();
+    }
+
+    public void disabledInit() {
+        teleop.disabledInit();
     }
 }
