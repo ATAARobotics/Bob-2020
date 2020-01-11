@@ -14,5 +14,7 @@ class OI {
     /**
      * periodic function to update controller input
      */
-    public void checkInputs() {}
+    public void checkInputs() {
+        
+    }
 }

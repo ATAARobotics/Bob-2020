@@ -4,11 +4,6 @@ import java.lang.Math;
 
 import com.revrobotics.ColorSensorV3;
 
-import java.io.FileWriter;
-import java.io.IOException;
-
-import com.revrobotics.ColorMatch;
-
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,12 +11,7 @@ public class Teleop {
     // Vairables for robot classes
     private OI joysticks = null;
 
-    private ColorMatch colorMatcher = null;
     private ColorSensorV3 colorSensor = null;
-
-    private FileWriter colorLog = null;
-
-    private String colorData = "";
 
     /**
      * Creates a Teleop object which is the main file when in teleop mode.
@@ -32,7 +22,6 @@ public class Teleop {
         joysticks = new OI();
 
         this.colorSensor = colorSensor;
-        colorMatcher = new ColorMatch();
 
     }
 
